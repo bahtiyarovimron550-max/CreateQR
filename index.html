@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#09090f">
+
+<title>QR Studio</title>
+
+<script src="https://unpkg.com/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --bg: #07070c;
+    --card: rgba(20, 20, 30, .88);
+    --card2: #11111a;
+    --border: rgba(255,255,255,.09);
+    --text: #fff;
+    --muted: #9696a8;
+    --blue: #5865f2;
+    --purple: #8b5cf6;
+    --green: #22c55e;
+    --red: #ef4444;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 10% 0%, rgba(88,101,242,.25), transparent 30%),
+        radial-gradient(circle at 90% 15%, rgba(139,92,246,.2), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(34,197,94,.08), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    width: 100%;
+    max-width: 720px;
+    margin: auto;
+    padding: 18px;
+}
+
+.header {
+    text-align: center;
+    padding: 15px 0 25px;
+}
+
+.logo {
+    width: 72px;
+    height: 72px;
+    margin: auto;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    background: linear-gradient(135deg, #5865f2, #8b5cf6);
+    box-shadow: 0 20px 50px rgba(88,101,242,.3);
+}
+
+h1 {
+    margin: 15px 0 6px;
+    font-size: 32px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.25);
+    backdrop-filter: blur(18px);
+}
+
+.card-title {
+    margin: 0 0 15px;
+    font-size: 18px;
+}
+
+.types {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.type {
+    min-height: 72px;
+    border: 1px solid #272738;
+    background: #12121c;
+    color: #cfcfe0;
+    border-radius: 15px;
+    padding: 9px 4px;
+    font-size: 11px;
+    transition: .2s;
+}
+
+.type span {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.type.active {
+    background: linear-gradient(135deg, #5865f2, #7c3aed);
+    border-color: #7580ff;
+    color: white;
+    box-shadow: 0 8px 20px rgba(88,101,242,.25);
+}
+
+label {
+    display: block;
+    color: #d7d7e5;
+    font-size: 13px;
+    margin: 14px 0 7px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    border: 1px solid #29293a;
+    background: #0d0d15;
+    color: white;
+    outline: none;
+    border-radius: 13px;
+    padding: 13px;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #5865f2;
+    box-shadow: 0 0 0 3px rgba(88,101,242,.12);
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.three {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.primary,
+.secondary,
+.download,
+.danger {
+    width: 100%;
+    border: 0;
+    border-radius: 15px;
+    padding: 14px;
+    color: white;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+.primary {
+    background: linear-gradient(135deg, #5865f2, #8b5cf6);
+    box-shadow: 0 10px 25px rgba(88,101,242,.25);
+}
+
+.secondary {
+    background: #252535;
+}
+
+.download {
+    background: #16a34a;
+}
+
+.danger {
+    background: #7f1d1d;
+}
+
+button:active {
+    transform: scale(.98);
+}
+
+.range-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.range-row input[type="range"] {
+    padding: 0;
+}
+
+.value {
+    min-width: 52px;
+    color: #8fa2ff;
+    font-weight: bold;
+    text-align: right;
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.color-box {
+    background: #0d0d15;
+    border: 1px solid #29293a;
+    padding: 10px;
+    border-radius: 14px;
+}
+
+.color-box input[type="color"] {
+    width: 100%;
+    height: 45px;
+    padding: 3px;
+    border-radius: 10px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    color: #cfcfe0;
+    font-size: 13px;
+}
+
+.checkbox input {
+    width: auto;
+}
+
+.logo-upload {
+    border: 1px dashed #44445a;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    background: #0d0d15;
+}
+
+.logo-upload input {
+    border: 0;
+    background: transparent;
+    padding: 8px;
+}
+
+.logo-preview {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: 12px;
+    margin: 8px auto;
+    display: none;
+    background: white;
+}
+
+.qr-card {
+    display: none;
+    text-align: center;
+}
+
+.qr-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+#qrCanvas {
+    background: white;
+    padding: 14px;
+    border-radius: 20px;
+    display: inline-block;
+    box-shadow: 0 15px 40px rgba(0,0,0,.35);
+}
+
+#qrCanvas canvas,
+#qrCanvas img {
+    max-width: 100%;
+    height: auto;
+}
+
+.qr-info {
+    color: var(--muted);
+    font-size: 12px;
+    word-break: break-word;
+    margin-top: 10px;
+}
+
+.format-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.format-buttons button {
+    background: #20202e;
+    color: white;
+    border: 1px solid #303044;
+    border-radius: 12px;
+    padding: 10px 5px;
+    font-size: 12px;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #0d0d15;
+    border: 1px solid #242435;
+    padding: 11px;
+    border-radius: 14px;
+    margin-top: 8px;
+}
+
+.history-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #5865f2, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.history-text strong {
+    display: block;
+    font-size: 13px;
+}
+
+.history-text small {
+    display: block;
+    color: #77778a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 3px;
+}
+
+.history-open {
+    width: auto;
+    padding: 8px 11px;
+    background: #242435;
+    border: 0;
+    color: white;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+.footer {
+    text-align: center;
+    color: #666679;
+    font-size: 12px;
+    padding: 15px 0 30px;
+}
+
+.note {
+    color: #77778a;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.social {
+    background: #151522;
+    color: #ddd;
+    border: 1px solid #29293a;
+    border-radius: 12px;
+    padding: 10px 5px;
+    font-size: 12px;
+}
+
+.social.active {
+    background: #5865f2;
+    border-color: #7580ff;
+}
+
+@media(max-width:500px) {
+    .types {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .social-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .format-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:360px) {
+    .types {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .row,
+    .three,
+    .color-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+        <div class="logo">▦</div>
+        <h1>QR Studio</h1>
+        <div class="subtitle">
+            Создавай красивые QR-коды для чего угодно
+        </div>
+    </header>
+
+    <!-- TYPE -->
+    <section class="card">
+
+        <h2 class="card-title">Что кодируем?</h2>
+
+        <div class="types">
+
+            <button class="type active" onclick="setType('text', this)">
+                <span>📝</span>Текст
+            </button>
+
+            <button class="type" onclick="setType('url', this)">
+                <span>🔗</span>Ссылка
+            </button>
+
+            <button class="type" onclick="setType('social', this)">
+                <span>🌐</span>Соцсеть
+            </button>
+
+            <button class="type" onclick="setType('wifi', this)">
+                <span>📶</span>Wi-Fi
+            </button>
+
+            <button class="type" onclick="setType('phone', this)">
+                <span>📞</span>Телефон
+            </button>
+
+            <button class="type" onclick="setType('sms', this)">
+                <span>💬</span>SMS
+            </button>
+
+            <button class="type" onclick="setType('email', this)">
+                <span>✉️</span>Email
+            </button>
+
+            <button class="type" onclick="setType('telegram', this)">
+                <span>✈️</span>Telegram
+            </button>
+
+            <button class="type" onclick="setType('geo', this)">
+                <span>📍</span>Место
+            </button>
+
+            <button class="type" onclick="setType('contact', this)">
+                <span>👤</span>Контакт
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- DATA -->
+    <section class="card">
+
+        <div id="form-text">
+
+            <label>Текст</label>
+
+            <textarea
+                id="textInput"
+                placeholder="Введите любой текст..."></textarea>
+
+        </div>
+
+
+        <div id="form-url" class="hidden">
+
+            <label>URL</label>
+
+            <input
+                id="urlInput"
+                type="url"
+                placeholder="https://example.com">
+
+        </div>
+
+
+        <div id="form-social" class="hidden">
+
+            <label>Выберите сервис</label>
+
+            <div class="social-grid">
+
+                <button class="social" onclick="selectSocial('Instagram', 'https://instagram.com/')">
+                    Instagram
+                </button>
+
+                <button class="social" onclick="selectSocial('YouTube', 'https://youtube.com/@')">
+                    YouTube
+                </button>
+
+                <button class="social" onclick="selectSocial('TikTok', 'https://tiktok.com/@')">
+                    TikTok
+                </button>
+
+                <button class="social" onclick="selectSocial('Telegram', 'https://t.me/')">
+                    Telegram
+                </button>
+
+                <button class="social" onclick="selectSocial('Pinterest', 'https://pinterest.com/')">
+                    Pinterest
+                </button>
+
+                <button class="social" onclick="selectSocial('Facebook', 'https://facebook.com/')">
+                    Facebook
+                </button>
+
+                <button class="social" onclick="selectSocial('X / Twitter', 'https://x.com/')">
+                    X / Twitter
+                </button>
+
+                <button class="social" onclick="selectSocial('VK', 'https://vk.com/')">
+                    VK
+                </button>
+
+                <button class="social" onclick="selectSocial('Discord', 'https://discord.com/')">
+                    Discord
+                </button>
+
+                <button class="social" onclick="selectSocial('WhatsApp', 'https://wa.me/')">
+                    WhatsApp
+                </button>
+
+            </div>
+
+            <label>Имя пользователя / ссылка</label>
+
+            <input
+                id="socialInput"
+                placeholder="например: username">
+
+            <div class="note">
+                Для обычной ссылки можно использовать раздел «Ссылка».
+            </div>
+
+        </div>
+
+
+        <div id="form-wifi" class="hidden">
+
+            <label>Название Wi-Fi</label>
+
+            <input id="wifiName" placeholder="My WiFi">
+
+            <label>Пароль</label>
+
+            <input id="wifiPassword" type="text" placeholder="Пароль">
+
+            <label>Тип защиты</label>
+
+            <select id="wifiSecurity">
+
+                <option value="WPA">WPA / WPA2</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Без пароля</option>
+
+            </select>
+
+            <label class="checkbox">
+                <input id="wifiHidden" type="checkbox">
+                Скрытая сеть
+            </label>
+
+        </div>
+
+
+        <div id="form-phone" class="hidden">
+
+            <label>Номер телефона</label>
+
+            <input
+                id="phoneInput"
+                type="tel"
+                placeholder="+998901234567">
+
+        </div>
+
+
+        <div id="form-sms" class="hidden">
+
+            <label>Номер телефона</label>
+
+            <input
+                id="smsPhone"
+                type="tel"
+                placeholder="+998901234567">
+
+            <label>Сообщение</label>
+
+            <textarea
+                id="smsMessage"
+                placeholder="Ваше сообщение"></textarea>
+
+        </div>
+
+
+        <div id="form-email" class="hidden">
+
+            <label>Email</label>
+
+            <input
+                id="emailAddress"
+                type="email"
+                placeholder="example@gmail.com">
+
+            <label>Тема</label>
+
+            <input
+                id="emailSubject"
+                placeholder="Тема письма">
+
+            <label>Сообщение</label>
+
+            <textarea
+                id="emailMessage"
+                placeholder="Текст письма"></textarea>
+
+        </div>
+
+
+        <div id="form-telegram" class="hidden">
+
+            <label>Telegram username</label>
+
+            <input
+                id="telegramUsername"
+                placeholder="@username">
+
+        </div>
+
+
+        <div id="form-geo" class="hidden">
+
+            <div class="row">
+
+                <div>
+                    <label>Широта</label>
+
+                    <input
+                        id="latitude"
+                        type="number"
+                        step="any"
+                        placeholder="41.2995">
+                </div>
+
+                <div>
+                    <label>Долгота</label>
+
+                    <input
+                        id="longitude"
+                        type="number"
+                        step="any"
+                        placeholder="69.2401">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="form-contact" class="hidden">
+
+            <label>Имя</label>
+
+            <input id="contactName" placeholder="Имя Фамилия">
+
+            <label>Телефон</label>
+
+            <input id="contactPhone" placeholder="+998901234567">
+
+            <label>Email</label>
+
+            <input id="contactEmail" placeholder="example@gmail.com">
+
+            <label>Компания</label>
+
+            <input id="contactCompany" placeholder="Компания">
+
+        </div>
+
+
+        <button class="primary" onclick="generateQR()">
+            Создать QR-код
+        </button>
+
+    </section>
+
+
+    <!-- DESIGN -->
+    <section class="card">
+
+        <h2 class="card-title">Дизайн QR-кода</h2>
+
+
+        <label>Цвет QR</label>
+
+        <div class="color-grid">
+
+            <div class="color-box">
+
+                <small>Основной</small>
+
+                <input
+                    type="color"
+                    id="darkColor"
+                    value="#000000">
+
+            </div>
+
+            <div class="color-box">
+
+                <small>Фон</small>
+
+                <input
+                    type="color"
+                    id="lightColor"
+                    value="#ffffff">
+
+            </div>
+
+        </div>
+
+
+        <label>Тип точек</label>
+
+        <select id="dotsType">
+
+            <option value="square">Квадрат</option>
+            <option value="dots">Круг</option>
+            <option value="rounded">Закруглённый</option>
+            <option value="classy">Classy</option>
+            <option value="classy-rounded">Classy Rounded</option>
+            <option value="extra-rounded">Extra Rounded</option>
+
+        </select>
+
+
+        <label>Тип углов</label>
+
+        <select id="cornersType">
+
+            <option value="square">Квадрат</option>
+            <option value="dot">Круг</option>
+            <option value="extra-rounded">Закруглённый</option>
+
+        </select>
+
+
+        <label>Тип угловых точек</label>
+
+        <select id="cornersDotType">
+
+            <option value="square">Квадрат</option>
+            <option value="dot">Круг</option>
+
+        </select>
+
+
+        <label>Размер</label>
+
+        <div class="range-row">
+
+            <input
+                type="range"
+                id="size"
+                min="180"
+                max="700"
+                value="320"
+                oninput="updateSettings()">
+
+            <span class="value" id="sizeValue">
+                320
+            </span>
+
+        </div>
+
+
+        <label>Отступ</label>
+
+        <div class="range-row">
+
+            <input
+                type="range"
+                id="margin"
+                min="0"
+                max="50"
+                value="10"
+                oninput="updateSettings()">
+
+            <span class="value" id="marginValue">
+                10
+            </span>
+
+        </div>
+
+
+        <label>Коррекция ошибок</label>
+
+        <select id="errorCorrection">
+
+            <option value="L">L — низкая</option>
+            <option value="M" selected>M — средняя</option>
+            <option value="Q">Q — высокая</option>
+            <option value="H">H — максимальная</option>
+
+        </select>
+
+    </section>
+
+
+    <!-- LOGO -->
+    <section class="card">
+
+        <h2 class="card-title">Логотип в центре</h2>
+
+        <div class="logo-upload">
+
+            <div>Выбери изображение</div>
+
+            <input
+                type="file"
+                id="logoInput"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                onchange="loadLogo(event)">
+
+            <img
+                id="logoPreview"
+                class="logo-preview">
+
+        </div>
+
+        <button
+            class="secondary"
+            onclick="removeLogo()">
+            Убрать логотип
+        </button>
+
+        <div class="note">
+            Лучше использовать небольшое квадратное изображение.
+            Для QR с логотипом рекомендуется коррекция H.
+        </div>
+
+    </section>
+
+
+    <!-- QR -->
+    <section class="card qr-card" id="qrResult">
+
+        <h2 class="card-title">Ваш QR-код</h2>
+
+        <div class="qr-area">
+            <div id="qrCanvas"></div>
+        </div>
+
+        <div
+            class="qr-info"
+            id="qrInfo">
+        </div>
+
+
+        <div class="format-buttons">
+
+            <button onclick="downloadQR('png')">
+                PNG
+            </button>
+
+            <button onclick="downloadQR('jpeg')">
+                JPEG
+            </button>
+
+            <button onclick="downloadQR('webp')">
+                WEBP
+            </button>
+
+            <button onclick="downloadQR('svg')">
+                SVG
+            </button>
+
+        </div>
+
+
+        <button
+            class="secondary"
+            onclick="copyQRText()">
+            📋 Копировать данные
+        </button>
+
+    </section>
+
+
+    <!-- HISTORY -->
+    <section class="card">
+
+        <h2 class="card-title">История QR-кодов</h2>
+
+        <div id="history"></div>
+
+        <button
+            class="danger"
+            onclick="clearHistory()">
+            🗑 Очистить историю
+        </button>
+
+    </section>
+
+
+    <footer class="footer">
+        QR Studio • Работает прямо в браузере
+    </footer>
+
+</div>
+
+
+<script>
+
+let currentType = "text";
+let currentQRText = "";
+let currentSocialBase = "";
+let logoData = null;
+let qr = null;
+
+
+const correctionMap = {
+    L: "L",
+    M: "M",
+    Q: "Q",
+    H: "H"
+};
+
+
+/* ---------------- TYPES ---------------- */
+
+function setType(type, button) {
+
+    currentType = type;
+
+    document
+        .querySelectorAll(".type")
+        .forEach(el => el.classList.remove("active"));
+
+    button.classList.add("active");
+
+    const forms = [
+        "text",
+        "url",
+        "social",
+        "wifi",
+        "phone",
+        "sms",
+        "email",
+        "telegram",
+        "geo",
+        "contact"
+    ];
+
+    forms.forEach(name => {
+
+        const element =
+            document.getElementById("form-" + name);
+
+        if (element) {
+            element.classList.add("hidden");
+        }
+
+    });
+
+    const selected =
+        document.getElementById("form-" + type);
+
+    if (selected) {
+        selected.classList.remove("hidden");
+    }
+}
+
+
+/* ---------------- SOCIAL ---------------- */
+
+function selectSocial(name, base) {
+
+    currentSocialBase = base;
+
+    document
+        .querySelectorAll(".social")
+        .forEach(el => el.classList.remove("active"));
+
+    event.currentTarget.classList.add("active");
+
+    document.getElementById("socialInput").placeholder =
+        name === "YouTube"
+            ? "@channel"
+            : "username";
+}
+
+
+/* ---------------- DATA ---------------- */
+
+function getQRText() {
+
+    if (currentType === "text") {
+
+        return document
+            .getElementById("textInput")
+            .value
+            .trim();
+    }
+
+
+    if (currentType === "url") {
+
+        return document
+            .getElementById("urlInput")
+            .value
+            .trim();
+    }
+
+
+    if (currentType === "social") {
+
+        let value =
+            document
+                .getElementById("socialInput")
+                .value
+                .trim();
+
+        if (!value) return "";
+
+        if (
+            value.startsWith("http://") ||
+            value.startsWith("https://")
+        ) {
+            return value;
+        }
+
+        value = value.replace(/^@/, "");
+
+        return currentSocialBase + value;
+    }
+
+
+    if (currentType === "wifi") {
+
+        const ssid =
+            document.getElementById("wifiName").value;
+
+        const password =
+            document.getElementById("wifiPassword").value;
+
+        const security =
+            document.getElementById("wifiSecurity").value;
+
+        const hidden =
+            document.getElementById("wifiHidden").checked;
+
+        return (
+            "WIFI:" +
+            "T:" + security +
+            ";S:" + escapeWifi(ssid) +
+            ";P:" + escapeWifi(password) +
+            ";H:" + hidden +
+            ";;"
+        );
+    }
+
+
+    if (currentType === "phone") {
+
+        const phone =
+            document
+                .getElementById("phoneInput")
+                .value
+                .trim();
+
+        return "tel:" + phone;
+    }
+
+
+    if (currentType === "sms") {
+
+        const phone =
+            document
+                .getElementById("smsPhone")
+                .value
+                .trim();
+
+        const message =
+            document
+                .getElementById("smsMessage")
+                .value;
+
+        return (
+            "SMSTO:" +
+            phone +
+            ":" +
+            message
+        );
+    }
+
+
+    if (currentType === "email") {
+
+        const address =
+            document
+                .getElementById("emailAddress")
+                .value
+                .trim();
+
+        const subject =
+            document
+                .getElementById("emailSubject")
+                .value;
+
+        const message =
+            document
+                .getElementById("emailMessage")
+                .value;
+
+        return (
+            "mailto:" +
+            address +
+            "?subject=" +
+            encodeURIComponent(subject) +
+            "&body=" +
+            encodeURIComponent(message)
+        );
+    }
+
+
+    if (currentType === "telegram") {
+
+        let username =
+            document
+                .getElementById("telegramUsername")
+                .value
+                .trim();
+
+        username = username.replace(/^@/, "");
+
+        return "https://t.me/" + username;
+    }
+
+
+    if (currentType === "geo") {
+
+        const lat =
+            document.getElementById("latitude").value;
+
+        const lon =
+            document.getElementById("longitude").value;
+
+        return "geo:" + lat + "," + lon;
+    }
+
+
+    if (currentType === "contact") {
+
+        const name =
+            document.getElementById("contactName").value;
+
+        const phone =
+            document.getElementById("contactPhone").value;
+
+        const email =
+            document.getElementById("contactEmail").value;
+
+        const company =
+            document.getElementById("contactCompany").value;
+
+        return (
+`BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+TEL:${phone}
+EMAIL:${email}
+ORG:${company}
+END:VCARD`
+        );
+    }
+
+    return "";
+}
+
+
+/* ---------------- WIFI ---------------- */
+
+function escapeWifi(value) {
+
+    return value
+        .replace(/\\/g, "\\\\")
+        .replace(/;/g, "\\;")
+        .replace(/,/g, "\\,")
+        .replace(/:/g, "\\:");
+}
+
+
+/* ---------------- LOGO ---------------- */
+
+function loadLogo(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        logoData = e.target.result;
+
+        const preview =
+            document.getElementById("logoPreview");
+
+        preview.src = logoData;
+        preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+function removeLogo() {
+
+    logoData = null;
+
+    document.getElementById("logoInput").value = "";
+
+    const preview =
+        document.getElementById("logoPreview");
+
+    preview.src = "";
+    preview.style.display = "none";
+}
+
+
+/* ---------------- QR SETTINGS ---------------- */
+
+function getSize() {
+
+    return Number(
+        document.getElementById("size").value
+    );
+}
+
+
+function getMargin() {
+
+    return Number(
+        document.getElementById("margin").value
+    );
+}
+
+
+function getCorrection() {
+
+    return correctionMap[
+        document.getElementById("errorCorrection").value
+    ];
+}
+
+
+function updateSettings() {
+
+    const size = getSize();
+    const margin = getMargin();
+
+    document.getElementById("sizeValue").textContent =
+        size;
+
+    document.getElementById("marginValue").textContent =
+        margin;
+
+    if (currentQRText) {
+        generateQR(false);
+    }
+}
+
+
+/* ---------------- GENERATE ---------------- */
+
+function generateQR(save = true) {
+
+    const text = getQRText();
+
+    if (!text) {
+
+        alert("Заполни данные для QR-кода.");
+
+        return;
+    }
+
+    currentQRText = text;
+
+    const container =
+        document.getElementById("qrCanvas");
+
+    container.innerHTML = "";
+
+    const options = {
+
+        width: getSize(),
+
+        height: getSize(),
+
+        type: "canvas",
+
+        data: text,
+
+        margin: getMargin(),
+
+        qrOptions: {
+            errorCorrectionLevel: getCorrection()
+        },
+
+        dotsOptions: {
+
+            type:
+                document.getElementById("dotsType").value,
+
+            color:
+                document.getElementById("darkColor").value
+
+        },
+
+        cornersSquareOptions: {
+
+            type:
+                document.getElementById("cornersType").value,
+
+            color:
+                document.getElementById("darkColor").value
+
+        },
+
+        cornersDotOptions: {
+
+            type:
+                document.getElementById("cornersDotType").value,
+
+            color:
+                document.getElementById("darkColor").value
+
+        },
+
+        backgroundOptions: {
+
+            color:
+                document.getElementById("lightColor").value
+
+        },
+
+        image: logoData || undefined,
+
+        imageOptions: {
+
+            hideBackgroundDots: true,
+
+            imageSize: 0.25,
+
+            margin: 5,
+
+            crossOrigin: "anonymous"
+
+        }
+
+    };
+
+
+    try {
+
+        qr = new QRCodeStyling(options);
+
+        qr.append(container);
+
+        document
+            .getElementById("qrResult")
+            .style.display = "block";
+
+        document
+            .getElementById("qrInfo")
+            .textContent =
+                "Размер: " +
+                getSize() +
+                " px • " +
+                text.length +
+                " символов";
+
+        if (save) {
+            saveHistory(text);
+        }
+
+        setTimeout(() => {
+
+            document
+                .getElementById("qrResult")
+                .scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+        }, 100);
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Не удалось создать QR-код. Проверь данные."
+        );
+    }
+}
+
+
+/* ---------------- DOWNLOAD ---------------- */
+
+function downloadQR(extension) {
+
+    if (!qr) {
+
+        alert("Сначала создай QR-код.");
+
+        return;
+    }
+
+    qr.download({
+        name: "qr-studio",
+        extension: extension
+    });
+}
+
+
+/* ---------------- COPY ---------------- */
+
+async function copyQRText() {
+
+    if (!currentQRText) return;
+
+    try {
+
+        await navigator.clipboard.writeText(
+            currentQRText
+        );
+
+        alert("Данные скопированы.");
+
+    } catch {
+
+        alert(
+            "Не удалось скопировать данные."
+        );
+    }
+}
+
+
+/* ---------------- HISTORY ---------------- */
+
+function saveHistory(text) {
+
+    let history =
+        JSON.parse(
+            localStorage.getItem("qrStudioHistory") || "[]"
+        );
+
+    history.unshift({
+
+        text: text,
+
+        type: currentType,
+
+        date:
+            new Date().toLocaleString("ru-RU")
+
+    });
+
+    history =
+        history.slice(0, 15);
+
+    localStorage.setItem(
+        "qrStudioHistory",
+        JSON.stringify(history)
+    );
+
+    showHistory();
+}
+
+
+function showHistory() {
+
+    const container =
+        document.getElementById("history");
+
+    let history =
+        JSON.parse(
+            localStorage.getItem("qrStudioHistory") || "[]"
+        );
+
+    container.innerHTML = "";
+
+    if (!history.length) {
+
+        container.innerHTML =
+            '<div class="note">История пока пустая.</div>';
+
+        return;
+    }
+
+
+    history.forEach((item, index) => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "history-item";
+
+        const icon =
+            document.createElement("div");
+
+        icon.className = "history-icon";
+        icon.textContent = "▦";
+
+
+        const text =
+            document.createElement("div");
+
+        text.className = "history-text";
+
+        const strong =
+            document.createElement("strong");
+
+        strong.textContent =
+            getTypeName(item.type);
+
+
+        const small =
+            document.createElement("small");
+
+        small.textContent =
+            item.text;
+
+
+        text.appendChild(strong);
+        text.appendChild(small);
+
+
+        const button =
+            document.createElement("button");
+
+        button.className = "history-open";
+        button.textContent = "Открыть";
+
+        button.onclick = function() {
+
+            useHistory(index);
+
+        };
+
+
+        div.appendChild(icon);
+        div.appendChild(text);
+        div.appendChild(button);
+
+        container.appendChild(div);
+
+    });
+}
+
+
+function useHistory(index) {
+
+    const history =
+        JSON.parse(
+            localStorage.getItem("qrStudioHistory") || "[]"
+        );
+
+    const item = history[index];
+
+    if (!item) return;
+
+    currentQRText = item.text;
+
+    const container =
+        document.getElementById("qrCanvas");
+
+    container.innerHTML = "";
+
+    qr = new QRCodeStyling({
+
+        width: getSize(),
+
+        height: getSize(),
+
+        type: "canvas",
+
+        data: item.text,
+
+        margin: getMargin(),
+
+        qrOptions: {
+            errorCorrectionLevel: getCorrection()
+        },
+
+        dotsOptions: {
+
+            type:
+                document.getElementById("dotsType").value,
+
+            color:
+                document.getElementById("darkColor").value
+
+        },
+
+        cornersSquareOptions: {
+
+            type:
+                document.getElementById("cornersType").value,
+
+            color:
+                document.getElementById("darkColor").value
+
+        },
+
+        cornersDotOptions: {
+
+            type:
+                document.getElementById("cornersDotType").value,
+
+            color:
+                document.getElementById("darkColor").value
+
+        },
+
+        backgroundOptions: {
+
+            color:
+                document.getElementById("lightColor").value
+
+        },
+
+        image: logoData || undefined,
+
+        imageOptions: {
+
+            hideBackgroundDots: true,
+
+            imageSize: 0.25,
+
+            margin: 5
+
+        }
+
+    });
+
+
+    qr.append(container);
+
+    document
+        .getElementById("qrResult")
+        .style.display = "block";
+
+
+    document
+        .getElementById("qrResult")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+}
+
+
+function clearHistory() {
+
+    if (
+        !confirm(
+            "Очистить всю историю QR-кодов?"
+        )
+    ) {
+        return;
+    }
+
+    localStorage.removeItem(
+        "qrStudioHistory"
+    );
+
+    showHistory();
+}
+
+
+/* ---------------- NAMES ---------------- */
+
+function getTypeName(type) {
+
+    const names = {
+
+        text: "Текст",
+
+        url: "Ссылка",
+
+        social: "Соцсеть",
+
+        wifi: "Wi-Fi",
+
+        phone: "Телефон",
+
+        sms: "SMS",
+
+        email: "Email",
+
+        telegram: "Telegram",
+
+        geo: "Место",
+
+        contact: "Контакт"
+
+    };
+
+    return names[type] || "QR-код";
+}
+
+
+/* ---------------- LIVE DESIGN ---------------- */
+
+[
+    "darkColor",
+    "lightColor",
+    "dotsType",
+    "cornersType",
+    "cornersDotType",
+    "errorCorrection"
+].forEach(id => {
+
+    document
+        .getElementById(id)
+        .addEventListener("change", function() {
+
+            if (currentQRText) {
+                generateQR(false);
+            }
+
+        });
+
+});
+
+
+/* ---------------- START ---------------- */
+
+showHistory();
+
+</script>
+
+</body>
+</html>
